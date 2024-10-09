@@ -3,11 +3,11 @@ game.StarterGui:SetCore("SendNotification", {
     Text = "Click (Check) to scan npc";
     Duration = 7;
 })
+
 local ScreenGui = Instance.new("ScreenGui")
 local MenuFrame = Instance.new("Frame")
 local CloseButton = Instance.new("TextButton")
 local CheckButton = Instance.new("TextButton")
-
 
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 MenuFrame.Size = UDim2.new(0, 200, 0, 100) -- Kích thước menu
@@ -36,7 +36,6 @@ CheckButton.Parent = MenuFrame
 CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
 end)
-
 
 CheckButton.MouseButton1Click:Connect(function()
     _G.HeadSize = 127
@@ -68,7 +67,6 @@ CheckButton.MouseButton1Click:Connect(function()
             end
         end
     end
-
 
     _G.Disabled = false
 end)
