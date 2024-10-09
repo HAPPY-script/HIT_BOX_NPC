@@ -1,0 +1,73 @@
+game.StarterGui:SetCore("SendNotification", {
+    Title = "CREATE BY HAPPY script";
+    Text = "Click Check to scan npc";
+    Duration = 7;
+local ScreenGui = Instance.new("ScreenGui")
+local MenuFrame = Instance.new("Frame")
+local CloseButton = Instance.new("TextButton")
+local CheckButton = Instance.new("TextButton")
+
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+MenuFrame.Size = UDim2.new(0, 200, 0, 100) -- Kích thước menu
+MenuFrame.Position = UDim2.new(0, 10, 0, 10) -- Vị trí menu
+MenuFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Màu đỏ
+MenuFrame.BackgroundTransparency = 0.5 -- Độ trong suốt
+MenuFrame.Active = true
+MenuFrame.Draggable = true
+MenuFrame.Parent = ScreenGui
+
+-- Cài đặt nút xóa
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(0, 5, 0, 5)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+CloseButton.Text = "X"
+CloseButton.Parent = MenuFrame
+
+-- Cài đặt nút check
+CheckButton.Size = UDim2.new(0, 100, 0, 50)
+CheckButton.Position = UDim2.new(0, 50, 0, 25)
+CheckButton.BackgroundColor3 = Color3.fromRGB(255, 215, 0) -- Màu vàng
+CheckButton.Text = "Check"
+CheckButton.Parent = MenuFrame
+
+-- Nút xóa sẽ đóng menu
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+
+CheckButton.MouseButton1Click:Connect(function()
+    _G.HeadSize = 127
+    _G.Disabled = true
+    local killRadius = 1000
+
+    if _G.Disabled then
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+        for _, npc in pairs(game:GetService('Workspace'):GetDescendants()) do
+            -- Kiểm tra đối tượng có phải là NPC và không phải người chơi
+            if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and not game.Players:GetPlayerFromCharacter(npc) then
+                local npcHumanoidRootPart = npc:FindFirstChild("HumanoidRootPart")
+                if npcHumanoidRootPart then
+                    local distance = (humanoidRootPart.Position - npcHumanoidRootPart.Position).Magnitude
+                    -- Chỉ tác động đến NPC trong bán kính 1000m
+                    if distance <= killRadius then
+                        pcall(function()
+                            npcHumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
+                            npcHumanoidRootPart.Transparency = 1
+                            npcHumanoidRootPart.BrickColor = BrickColor.new("Really white")
+                            npcHumanoidRootPart.Material = "Neon"
+                            npcHumanoidRootPart.CanCollide = false
+                        end)
+                    end
+                end
+            end
+        end
+    end
+
+
+    _G.Disabled = false
+end)
