@@ -1,7 +1,8 @@
 game.StarterGui:SetCore("SendNotification", {
     Title = "CREATE BY HAPPY script";
-    Text = "Click Check to scan npc";
+    Text = "Click (Check) to scan npc";
     Duration = 7;
+})
 local ScreenGui = Instance.new("ScreenGui")
 local MenuFrame = Instance.new("Frame")
 local CloseButton = Instance.new("TextButton")
