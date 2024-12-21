@@ -1,6 +1,6 @@
 game.StarterGui:SetCore("SendNotification", {
     Title = "CREATE BY HAPPY script";
-    Text = "Click (Check) to scan npc";
+    Text = "Click (Check) to scan and enlarge NPCs";
     Duration = 7;
 })
 
@@ -37,36 +37,37 @@ CloseButton.MouseButton1Click:Connect(function()
     ScreenGui:Destroy()
 end)
 
+-- Xử lý nút Check
 CheckButton.MouseButton1Click:Connect(function()
-    _G.HeadSize = 127
-    _G.Disabled = true
-    local killRadius = 1000
+    local maxSize = Vector3.new(100, 100, 100) -- Kích thước tối đa của NPC
+    local transparencyValue = 0.9 -- Độ trong suốt
+    local killRadius = 1000 -- Bán kính tác động
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
-    if _G.Disabled then
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-        for _, npc in pairs(game:GetService('Workspace'):GetDescendants()) do
-            -- Kiểm tra đối tượng có phải là NPC và không phải người chơi
-            if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and not game.Players:GetPlayerFromCharacter(npc) then
-                local npcHumanoidRootPart = npc:FindFirstChild("HumanoidRootPart")
-                if npcHumanoidRootPart then
-                    local distance = (humanoidRootPart.Position - npcHumanoidRootPart.Position).Magnitude
-                    -- Chỉ tác động đến NPC trong bán kính 1000m
+    -- Quét các NPC
+    for _, npc in pairs(game:GetService('Workspace'):GetDescendants()) do
+        if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and not game.Players:GetPlayerFromCharacter(npc) then
+            for _, part in pairs(npc:GetChildren()) do
+                -- Chỉ tác động đến các phần cơ thể (BasePart)
+                if part:IsA("BasePart") then
+                    local distance = (humanoidRootPart.Position - part.Position).Magnitude
                     if distance <= killRadius then
+                        -- Phóng to các phần cơ thể đến kích thước tối đa
                         pcall(function()
-                            npcHumanoidRootPart.Size = Vector3.new(_G.HeadSize, _G.HeadSize, _G.HeadSize)
-                            npcHumanoidRootPart.Transparency = 1
-                            npcHumanoidRootPart.BrickColor = BrickColor.new("Really white")
-                            npcHumanoidRootPart.Material = "Neon"
-                            npcHumanoidRootPart.CanCollide = false
+                            -- Chỉ phóng to nếu kích thước hiện tại nhỏ hơn maxSize
+                            if part.Size.X < maxSize.X then
+                                part.Size = maxSize
+                                part.Transparency = transparencyValue
+                                part.BrickColor = BrickColor.new("Really red")
+                                part.Material = Enum.Material.Neon
+                                part.CanCollide = false
+                            end
                         end)
                     end
                 end
             end
         end
     end
-
-    _G.Disabled = false
 end)
