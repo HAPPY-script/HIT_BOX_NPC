@@ -52,19 +52,22 @@ CheckButton.MouseButton1Click:Connect(function()
             for _, part in pairs(npc:GetChildren()) do
                 -- Chỉ tác động đến các phần cơ thể (BasePart)
                 if part:IsA("BasePart") then
-                    local distance = (humanoidRootPart.Position - part.Position).Magnitude
-                    if distance <= killRadius then
-                        -- Phóng to các phần cơ thể đến kích thước tối đa
-                        pcall(function()
-                            -- Chỉ phóng to nếu kích thước hiện tại nhỏ hơn maxSize
-                            if part.Size.X < maxSize.X then
-                                part.Size = maxSize
-                                part.Transparency = transparencyValue
-                                part.BrickColor = BrickColor.new("Really red")
-                                part.Material = Enum.Material.Neon
-                                part.CanCollide = false
-                            end
-                        end)
+                    -- Kiểm tra nếu phần này vẫn tồn tại và hợp lệ
+                    if part and part.Parent and part.Parent.Parent then
+                        local distance = (humanoidRootPart.Position - part.Position).Magnitude
+                        if distance <= killRadius then
+                            -- Phóng to các phần cơ thể đến kích thước tối đa
+                            pcall(function()
+                                -- Chỉ phóng to nếu kích thước hiện tại nhỏ hơn maxSize
+                                if part.Size.X < maxSize.X then
+                                    part.Size = maxSize
+                                    part.Transparency = transparencyValue
+                                    part.BrickColor = BrickColor.new("Really red")
+                                    part.Material = Enum.Material.Neon
+                                    part.CanCollide = false
+                                end
+                            end)
+                        end
                     end
                 end
             end
