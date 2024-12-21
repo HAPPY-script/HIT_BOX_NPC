@@ -39,8 +39,8 @@ end)
 
 -- Xử lý nút Check
 CheckButton.MouseButton1Click:Connect(function()
-    local maxSize = Vector3.new(100, 100, 100) -- Kích thước tối đa của NPC
-    local transparencyValue = 0.9 -- Độ trong suốt
+    local maxSize = Vector3.new(70, 70, 70) -- Kích thước tối đa của NPC
+    local transparencyValue = 1 -- Độ trong suốt
     local killRadius = 1000 -- Bán kính tác động
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
